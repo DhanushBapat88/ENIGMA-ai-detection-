@@ -1,5 +1,6 @@
-<<<<<<< HEAD
-# voice-ai-detector
+# ENIGMA - Voice AI Detector 🔊🤖
+
+A small repo demonstrating audio feature extraction, a RandomForest classifier for human vs. AI voice detection, and example pipelines for decoding Base64 audio.
 
 Repository layout:
 
@@ -12,35 +13,64 @@ Repository layout:
 
 Replace `model.pkl` with your trained model and implement real feature extraction.
 
-Quick demo
--
-To create a demo model and test the service locally:
+---
 
-PowerShell:
-```powershell
-python -m pip install -r voice-ai-detector/ml-service/requirements.txt
-python voice-ai-detector/ml-service/train_model.py
-python voice-ai-detector/ml-service/test_predict.py
-```
+## ▶️ Quick start (local)
+1. Install Python packages (recommended virtualenv):
 
-Start the Flask server:
-```powershell
-python voice-ai-detector/ml-service/app.py
-```
+   ```bash
+   pip install numpy librosa scikit-learn pydub soundfile
+   ```
 
-Example `curl` (JSON body expects `audio` to be a list of numbers):
-```bash
-curl -X POST http://127.0.0.1:5000/predict -H "Content-Type: application/json" \
-  -d '{"audio": [2.5]}
+2. Install FFmpeg and ensure it is on your PATH (required by `pydub`). See https://ffmpeg.org/.
 
-'
-```@dhanush
-->test_predict file setup is done and working properly
-->feature_extract file modification done and ready
-->app.py initial setup done 
-->feature_extractor is running properly 
-->ml model train part is completed but only detects the recordings with wav extension
----@Rajath
-->did n8n workflow.
--->converted to json file and pasted there.
--->there was option for database (postgres,MySQL,googlesheet) I choosed googlesheet for simplicity.
+3. Generate a model (if none exists):
+
+   ```bash
+   python ml-service/train_model.py
+   ```
+
+4. Run the demo prediction (uses an `.mp3` in `ml-service/data/` if present; otherwise falls back to a tiny WAV base64):
+
+   ```bash
+   python ml-service/test_predict.py
+   ```
+
+---
+
+## 🧪 Testing & expected behavior
+- `test_pipeline.py` verifies Base64 decoding → resample → trim → pad and prints array shape/duration.
+- `test_predict.py` performs an in-memory prediction: it will look for `.mp3` in `ml-service/data/`, encode it to base64, run it through the pipeline + feature extractor, and return a prediction using `model.pkl`.
+
+Notes:
+- Feature extraction expects >= 1s input; pipeline pads to 3s by default.
+- `model.pkl` must be present (run training if missing).
+---
+
+## 🚧 Known issues & TODO (prioritized)
+1. Data collection: **Collect 200 human + 200 AI** voice samples. (Current: ~2/2) — Highest priority
+2. Add evaluation: train/validation split, metrics (accuracy, precision, recall, ROC AUC), and threshold selection in `train_model.py` — Important
+3. Implement API server (FastAPI recommended) with `/detect-voice` endpoint, JSON responses, and proper error handling — Important
+4. Implement API key authentication server-side (workflow currently expects it) — Important
+5. Add `requirements.txt`, CI (pytest), and GitHub Actions to run tests — Medium
+6. Improve explainability and README documentation for decisions & thresholds — Medium
+
+---
+
+## 👥 Contributors
+- Member 1 — ML model, feature extractor: **(status: feature extraction & RF training done; evaluation missing)**
+- Member 2 — Audio pipeline: **(status: pipeline implemented; trimming & padding done; integration to API pending)**
+- Member 3 — Backend/API: **(status: workflow references API, server missing)**
+- Member 4 — Integration & docs: **(status: partial; README cleaned; explanation pending)**
+
+
+
+---
+
+## 🤝 How to help / contribute
+- Add more labeled audio files under `ml-service/data/human` and `ml-service/data/ai` (prefer `.wav` or `.mp3`) and name them consistently.
+- Implement an API in `ml-service/` (FastAPI suggested) with an authenticated `/detect-voice` endpoint.
+- Add proper train/validation code and a script to output evaluation metrics and a chosen decision threshold.
+- Create `requirements.txt` and add CI with `pytest`.
+
+---

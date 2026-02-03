@@ -53,6 +53,49 @@ def extract_features(wav_path: str):
         features.extend([0.0, 0.0])
 
     return np.array(features, dtype=np.float32)
+
+def extract_features_from_array(y: np.ndarray, sr: int = 16000):
+    """
+    Extract the same feature vector from an in-memory NumPy audio array.
+    """
+    if len(y) < sr:  # require at least 1 second
+        raise ValueError("Audio too short to extract features")
+
+    features = []
+
+    mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=40)
+    features.extend(mfcc.mean(axis=1))
+    features.extend(mfcc.std(axis=1))
+
+    centroid = librosa.feature.spectral_centroid(y=y, sr=sr)
+    features.append(centroid.mean())
+
+    rolloff = librosa.feature.spectral_rolloff(y=y, sr=sr)
+    features.append(rolloff.mean())
+
+    zcr = librosa.feature.zero_crossing_rate(y)
+    features.append(zcr.mean())
+
+    rms = librosa.feature.rms(y=y)
+    features.append(rms.mean())
+
+    f0, voiced_flag, _ = librosa.pyin(
+        y,
+        fmin=librosa.note_to_hz("C2"),
+        fmax=librosa.note_to_hz("C7")
+    )
+    if f0 is not None:
+        f0 = f0[~np.isnan(f0)]
+        if len(f0) > 0:
+            features.append(f0.mean())
+            features.append(f0.std())
+        else:
+            features.extend([0.0, 0.0])
+    else:
+        features.extend([0.0, 0.0])
+
+    return np.array(features, dtype=np.float32)
+
 #if __name__ == "__main__":
    # feats = extract_features("test.wav")
    # print("Type:", type(feats))
