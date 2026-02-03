@@ -40,3 +40,7 @@ curl -X POST http://127.0.0.1:5000/predict -H "Content-Type: application/json" \
 ->app.py initial setup done 
 ->feature_extractor is running properly 
 ->ml model train part is completed but only detects the recordings with wav extension
+---@Rajath
+->did n8n workflow.
+-->converted to json file and pasted there.
+-->there was option for database (postgres,MySQL,googlesheet) I choosed googlesheet for simplicity.
