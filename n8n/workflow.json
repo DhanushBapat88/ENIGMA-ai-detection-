@@ -60,13 +60,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://127.0.0.1:5000/process",
+        "url": "https://enigma-ai-detection.onrender.com/process",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
-              "name": "Authorization",
-              "value": "Bearer Qkef6vU90hKcU2Fvsaa2"
+              "name": "x-api-key",
+              "value": "sk_guvi_voice_2026"
             },
             {
               "name": "Content-Type",
@@ -75,18 +75,8 @@
           ]
         },
         "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "audio_url",
-              "value": "={{ $json.body.audio_url }}"
-            },
-            {
-              "name": "message",
-              "value": "={{ $json.executionMode }}"
-            }
-          ]
-        },
+        "specifyBody": "json",
+        "jsonBody": "{\n \"language\":\"en\",\n \"audio_format\":\"mp3\",\n \"audio_base64\":\"BASE64_AUDIO\"\n}\n",
         "options": {}
       },
       "id": "87364447-df58-48ef-9d22-86132967a6d2",
@@ -162,7 +152,7 @@
     "executionOrder": "v1",
     "availableInMCP": false
   },
-  "versionId": "1fe2d2d3-9563-4536-ab1f-b2f083c5ca97",
+  "versionId": "3468c5c3-c7e5-459c-bb4c-bcb1e7033bf1",
   "meta": {
     "instanceId": "d01d4391658a12ced28db5d3028edbf68e97f24150d5ac19c92c729a53e72bea"
   },

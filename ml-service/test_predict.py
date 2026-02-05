@@ -1,4 +1,4 @@
-'''
+
 import os
 import pickle
 import base64
@@ -99,32 +99,3 @@ def predict_audio(waveform, sr):
     confidence = float(np.max(proba))
 
     return label, confidence
-    '''
-import joblib
-import numpy as np
-from feature_extractor import extract_features_from_array
-
-# ---------- LOAD MODEL ----------
-model = joblib.load("model.pkl")
-
-# ---------- PREDICTION FUNCTION ----------
-def predict_audio(waveform, sr):
-    try:
-        # Feature extraction
-        features = extract_features_from_array(waveform, sr)
-
-        # Reshape
-        X = features.reshape(1, -1)
-
-        # Predict
-        pred = model.predict(X)[0]
-        proba = model.predict_proba(X)[0]
-
-        label = "AI_GENERATED" if int(pred) == 1 else "HUMAN"
-        confidence = float(np.max(proba))
-
-        return label, confidence
-
-    except Exception as e:
-        print("Prediction error:", e)
-        return "ERROR", 0.0
