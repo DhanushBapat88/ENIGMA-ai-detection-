@@ -1,9 +1,9 @@
 fastapi
 uvicorn
 numpy
-librosa
 scikit-learn
 joblib
-pydantic
-requests
-python-multipart
+pydub
+librosa
+soundfile
+
