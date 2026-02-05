@@ -77,3 +77,25 @@ for root, dirs, files in os.walk(DATA_DIR):
     print()
 
 print("=========== DONE ===========\n")
+
+import joblib
+import numpy as np
+from feature_extractor import extract_features_from_array
+
+model = joblib.load("model.pkl")
+
+def predict_audio(waveform, sr):
+    # Feature extraction
+    features = extract_features_from_array(waveform, sr)
+
+    # Reshape for model
+    X = features.reshape(1, -1)
+
+    # Prediction
+    pred = model.predict(X)[0]
+    proba = model.predict_proba(X)[0]
+
+    label = "AI_GENERATED" if int(pred) == 1 else "HUMAN"
+    confidence = float(np.max(proba))
+
+    return label, confidence
