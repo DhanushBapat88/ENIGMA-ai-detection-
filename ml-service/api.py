@@ -12,6 +12,27 @@ app = FastAPI(title="AI Generated Voice Detection API")
 # GUVI key
 API_KEY = "sk_guvi_voice_2026"
 
+# -------- Authorization Dependency --------
+def verify_api_key(authorization: str = Header(None)):
+    if authorization is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Authorization header missing"
+        )
+
+    # Accept both:
+    # "Bearer <API_KEY>" and "<API_KEY>"
+    token = authorization.replace("Bearer ", "").strip()
+
+    if token != API_KEY:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid API key"
+        )
+
+    return token
+
+
 # -------- Request Schema --------
 class AudioRequest(BaseModel):
     language: str
@@ -51,7 +72,10 @@ def process_audio(
         waveform = process_audio_pipeline(b64_audio)
 
         if waveform is None:
-            raise HTTPException(status_code=500, detail="Audio processing failed")
+            raise HTTPException(
+                status_code=500,
+                detail="Audio processing failed"
+            )
 
         sr = 16000
 
@@ -62,7 +86,8 @@ def process_audio(
         raise HTTPException(status_code=500, detail=str(e))
 
     finally:
-        os.remove(temp_path)
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
 
     # ✅ Response (GUVI format)
     return {
