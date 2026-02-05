@@ -60,11 +60,31 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://localhost:5000/process",
+        "url": "http://127.0.0.1:5000/process",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer Qkef6vU90hKcU2Fvsaa2"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
         "sendBody": true,
         "bodyParameters": {
           "parameters": [
-            {}
+            {
+              "name": "audio_url",
+              "value": "={{ $json.body.audio_url }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ $json.executionMode }}"
+            }
           ]
         },
         "options": {}
@@ -142,7 +162,7 @@
     "executionOrder": "v1",
     "availableInMCP": false
   },
-  "versionId": "18c8180f-9ae6-4b5d-830b-c41dca168d81",
+  "versionId": "1fe2d2d3-9563-4536-ab1f-b2f083c5ca97",
   "meta": {
     "instanceId": "d01d4391658a12ced28db5d3028edbf68e97f24150d5ac19c92c729a53e72bea"
   },

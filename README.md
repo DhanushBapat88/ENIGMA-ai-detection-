@@ -74,3 +74,30 @@ Notes:
 - Create `requirements.txt` and add CI with `pytest`.
 
 ---
+hello, to work on just put the command
+pip install fastapi uvicorn
+python -m uvicorn api:app --reload --port 5000
+u will get to see:
+Uvicorn running on http://127.0.0.1:5000
+Application startup complete
+and next, go to browser and test
+http://localhost:5000/docs
+Swagger UI will open 
+Next go to  Postman
+there  POST
+http://localhost:5678/webhook-test/process-audio
+and next select body 
+in that raw ->JSON->there u need to insert
+{
+  "audio_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+  "message": "testing"
+}
+then press send u will get the output:
+{
+    "status": "success",
+    "prediction": "HUMAN",
+    "confidence": 0.5,
+    "sample_rate": 16000
+}
+
+
