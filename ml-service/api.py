@@ -15,6 +15,27 @@ app = FastAPI(title="AI Generated Voice Detection API")
 # GUVI key
 API_KEY = "sk_guvi_voice_2026"
 
+# -------- Authorization Dependency --------
+def verify_api_key(authorization: str = Header(None)):
+    if authorization is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Authorization header missing"
+        )
+
+    # Accept both:
+    # "Bearer <API_KEY>" and "<API_KEY>"
+    token = authorization.replace("Bearer ", "").strip()
+
+    if token != API_KEY:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid API key"
+        )
+
+    return token
+
+
 # -------- Request Schema --------
 from pydantic import BaseModel, Field, field_validator
 from typing import Literal

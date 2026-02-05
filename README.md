@@ -1,15 +1,64 @@
 # ENIGMA - Voice AI Detector 🔊🤖
 
-A small repo demonstrating audio feature extraction, a RandomForest classifier for human vs. AI voice detection, and example pipelines for decoding Base64 audio.
+ENIGMA is a production‑style AI vs Human Voice Detection System that demonstrates a full pipeline from audio ingestion to machine‑learning prediction using FastAPI, an audio preprocessing pipeline, and an automated n8n workflow.
 
 Repository layout:
 
-- n8n/workflow.json — sample workflow
-- ml-service/
-  - app.py — minimal Flask prediction service
-  - feature_extractor.py — placeholder feature extraction
-  - model.pkl — placeholder model file
-  - requirements.txt — Python dependencies
+├── n8n/
+│   └── workflow.json          # n8n webhook → FastAPI integration
+│
+├── ml-service/
+│   ├── api.py                 # FastAPI prediction service
+│   ├── audio_pipeline.py      # Base64 → waveform processing
+│   ├── feature_extractor.py   # Audio feature extraction
+│   ├── train_model.py         # RandomForest training script
+│   ├── test_pipeline.py       # Audio pipeline validation
+│   ├── test_predict.py        # Batch prediction script
+│   ├── model.pkl              # Trained ML model
+│   └── data/
+│       ├── human/             # Human voice samples
+│       └── ai/                # AI‑generated voice samples
+│
+└── README.md
+
+Overview:
+
+This project simulates a real‑world architecture where voice audio is received via webhook automation, processed through an audio normalization pipeline, transformed into numerical features, and classified using a trained RandomForest model.
+
+Core Goals
+
+Detect whether a voice is Human or AI Generated
+
+Provide a secure API with authentication
+
+Demonstrate scalable ML + Backend integration
+
+Support automation workflows (n8n)
+
+
+
+System Architecture:
+
+Client / Tester / n8n
+        │
+        ▼
+FastAPI (/process)
+        │
+        ▼
+Base64 Decode
+        │
+        ▼
+Audio Pipeline (pydub + librosa)
+        │
+        ▼
+Feature Extraction
+        │
+        ▼
+RandomForest Model
+        │
+        ▼
+Prediction + Confidence
+
 
 Replace `model.pkl` with your trained model and implement real feature extraction.
 
