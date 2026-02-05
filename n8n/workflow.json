@@ -5,13 +5,18 @@
       "parameters": {
         "httpMethod": "POST",
         "path": "process-audio",
-        "responseMode": "lastNode"
+        "responseMode": "responseNode",
+        "options": {}
       },
-      "id": "webhook1",
+      "id": "c3c10ec8-c33f-462f-a708-d59fdc23788c",
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [-600, 0]
+      "position": [
+        -160,
+        -80
+      ],
+      "webhookId": "7242d1e5-38e9-4713-b4e1-0d5f26464f3a"
     },
     {
       "parameters": {
@@ -23,13 +28,17 @@
               "value2": "Bearer Qkef6vU90hKcU2Fvsaa2"
             }
           ]
-        }
+        },
+        "options": {}
       },
-      "id": "if1",
+      "id": "c4181143-7d0f-432c-b625-a2c5624fa0b2",
       "name": "Check API Key",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [-350, 0]
+      "position": [
+        96,
+        -80
+      ]
     },
     {
       "parameters": {
@@ -39,37 +48,53 @@
           "responseCode": 401
         }
       },
-      "id": "unauth",
+      "id": "0faf0f53-c852-4194-9bb8-c58e67ed9f77",
       "name": "Unauthorized",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [-150, 200]
+      "position": [
+        320,
+        192
+      ]
     },
     {
       "parameters": {
         "method": "POST",
         "url": "http://localhost:5000/process",
         "sendBody": true,
-        "jsonBody": "={\n  \"audio_url\": \"{{$json.body.audio_url}}\",\n  \"message\": \"{{$json.body.message}}\"\n}"
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
       },
-      "id": "fastapi",
+      "id": "87364447-df58-48ef-9d22-86132967a6d2",
       "name": "Send to FastAPI",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
-      "position": [-50, 0]
+      "position": [
+        368,
+        -96
+      ]
     },
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ $json }}"
+        "responseBody": "={{ $json }}",
+        "options": {}
       },
-      "id": "final",
+      "id": "be49ef8b-221b-4904-b2a4-60561953989a",
       "name": "Return Response",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [200, 0]
+      "position": [
+        640,
+        -80
+      ]
     }
   ],
+  "pinData": {},
   "connections": {
     "Webhook": {
       "main": [
@@ -113,5 +138,14 @@
     }
   },
   "active": true,
-  "settings": {}
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "18c8180f-9ae6-4b5d-830b-c41dca168d81",
+  "meta": {
+    "instanceId": "d01d4391658a12ced28db5d3028edbf68e97f24150d5ac19c92c729a53e72bea"
+  },
+  "id": "S9jen6WuaxWbohFY",
+  "tags": []
 }
