@@ -8,4 +8,5 @@ librosa
 soundfile
 ffmpeg-python
 pydub
+python-multipart
 
