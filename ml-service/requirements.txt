@@ -6,4 +6,6 @@ joblib
 pydub
 librosa
 soundfile
+ffmpeg-python
+pydub
 
