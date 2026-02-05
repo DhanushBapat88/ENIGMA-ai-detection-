@@ -1,316 +1,110 @@
 {
-  "name": "ai_impact",
+  "name": "AI_Impact_Final",
   "nodes": [
     {
       "parameters": {
         "httpMethod": "POST",
         "path": "process-audio",
-        "responseMode": "lastNode",
-        "options": {}
+        "responseMode": "lastNode"
       },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2.1,
-      "position": [
-        -560,
-        -224
-      ],
-      "id": "1ead8fb0-65e7-4e5f-b92f-f646f76b11a8",
+      "id": "webhook1",
       "name": "Webhook",
-      "webhookId": "32b8f68c-527b-488d-aa91-d072d372dc4d"
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-600, 0]
     },
     {
       "parameters": {
         "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 3
-          },
-          "conditions": [
+          "string": [
             {
-              "id": "b0131c32-0eec-4b13-85e6-2a05843f37d1",
-              "leftValue": "={{ $json.headers.authorization }}",
-              "rightValue": "Qkef6vU90hKcU2Fvsaa2",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
+              "value1": "={{ $json.headers.authorization }}",
+              "operation": "equal",
+              "value2": "Bearer Qkef6vU90hKcU2Fvsaa2"
             }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
+          ]
+        }
       },
+      "id": "if1",
+      "name": "Check API Key",
       "type": "n8n-nodes-base.if",
-      "typeVersion": 2.3,
-      "position": [
-        -336,
-        -224
-      ],
-      "id": "ad8dcd3a-895b-47ed-a1db-9ef412d85b6f",
-      "name": "If"
+      "typeVersion": 2,
+      "position": [-350, 0]
     },
     {
       "parameters": {
-        "respondWith": "text",
-        "responseBody": "{\"status\": \"error\", \"message\": \"Unauthorized: Invalid API Key\"}\n",
+        "respondWith": "json",
+        "responseBody": "{\"status\":\"error\",\"message\":\"Unauthorized\"}",
         "options": {
           "responseCode": 401
         }
       },
+      "id": "unauth",
+      "name": "Unauthorized",
       "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.5,
-      "position": [
-        -416,
-        192
-      ],
-      "id": "5fd8c89a-17cb-4710-ae8f-01b381cd6b7e",
-      "name": "Respond to Webhook"
+      "typeVersion": 1,
+      "position": [-150, 200]
     },
     {
       "parameters": {
         "method": "POST",
         "url": "http://localhost:5000/process",
         "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "audio_data",
-              "value": "={{ $json.body.audio }}"
-            }
-          ]
-        },
-        "options": {}
+        "jsonBody": "={\n  \"audio_url\": \"{{$json.body.audio_url}}\",\n  \"message\": \"{{$json.body.message}}\"\n}"
       },
+      "id": "fastapi",
+      "name": "Send to FastAPI",
       "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.3,
-      "position": [
-        -80,
-        112
-      ],
-      "id": "b5f596e9-070c-4578-a860-8f11fbd756a5",
-      "name": "HTTP Request"
+      "typeVersion": 4,
+      "position": [-50, 0]
     },
     {
       "parameters": {
-        
-        "operation": "append",
-        "documentId": {
-          "__rl": true,
-          "value": "1P6rmMQsE0koZhMpF51DBhsTgD2bwEwDG4n0yUWxpwFM",
-          "mode": "list",
-          "cachedResultName": "AI Processing Logs",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1P6rmMQsE0koZhMpF51DBhsTgD2bwEwDG4n0yUWxpwFM/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1P6rmMQsE0koZhMpF51DBhsTgD2bwEwDG4n0yUWxpwFM/edit#gid=0"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "Timestamp": "{{ $now }}",
-            "Filename": "{{ $node[\"Webhook\"].json.body.fileName }}",
-            "Client_ID": "{{ $node[\"Webhook\"].json.headers.host }}",
-            "Status": "Success - Forwarded to FastAPI"
-          },
-          "matchingColumns": [],
-          "schema": [
-            {
-              "id": "Timestamp",
-              "displayName": "Timestamp",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Filename",
-              "displayName": "Filename",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Client_ID",
-              "displayName": "Client_ID",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Status",
-              "displayName": "Status",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
       },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        -64,
-        -240
-      ],
-      "id": "d07f772e-4347-4a81-bb12-6b51b5718ece",
-      "name": "Get DATA",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "CfFnmDhv3Q9kxqvZ",
-          "name": "Google Sheets account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "append",
-        "documentId": {
-          "__rl": true,
-          "value": "1GUoEbuE8fYuRYcOpu-piRch7Yrxv-upIeCaIvMVayEU",
-          "mode": "list",
-          "cachedResultName": "ResultAI",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GUoEbuE8fYuRYcOpu-piRch7Yrxv-upIeCaIvMVayEU/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GUoEbuE8fYuRYcOpu-piRch7Yrxv-upIeCaIvMVayEU/edit#gid=0"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "Timestamp": "{{ $now }}",
-            "Filename": "{{ $node[\"Webhook\"].json.body.fileName }}",
-            "Result": "{{ $json.transcription }}",
-            "Status": "Completed"
-          },
-          "matchingColumns": [],
-          "schema": [
-            {
-              "id": "Timestamp",
-              "displayName": "Timestamp",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Filename",
-              "displayName": "Filename",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Result",
-              "displayName": "Result",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "Status",
-              "displayName": "Status",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        160,
-        112
-      ],
-      "id": "45724dc1-cab7-4ce4-b85f-e41daaaf126a",
-      "name": "Result",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "CfFnmDhv3Q9kxqvZ",
-          "name": "Google Sheets account"
-        }
-      }
+      "id": "final",
+      "name": "Return Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [200, 0]
     }
   ],
-  "pinData": {},
   "connections": {
     "Webhook": {
       "main": [
         [
           {
-            "node": "If",
+            "node": "Check API Key",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "If": {
+    "Check API Key": {
       "main": [
         [
           {
-            "node": "Get DATA",
+            "node": "Send to FastAPI",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Respond to Webhook",
+            "node": "Unauthorized",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "HTTP Request": {
+    "Send to FastAPI": {
       "main": [
         [
           {
-            "node": "Result",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get DATA": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request",
+            "node": "Return Response",
             "type": "main",
             "index": 0
           }
@@ -318,16 +112,6 @@
       ]
     }
   },
-  "active": false,
-  "settings": {
-    "executionOrder": "v1",
-    "availableInMCP": false
-  },
-  "versionId": "f24368be-6485-4849-b860-5386a18d0e0d",
-  "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "d01d4391658a12ced28db5d3028edbf68e97f24150d5ac19c92c729a53e72bea"
-  },
-  "id": "zQc01xEXK1ryMShq",
-  "tags": []
+  "active": true,
+  "settings": {}
 }
