@@ -106,6 +106,62 @@ Notes:
 
 ---
 
+---
+
+## ✨ Features Implemented
+
+### 🎙️ Audio Processing
+- **Base64 Decoding & Encoding**: Seamless conversion between raw audio bytes and base64-encoded strings for API transmission
+- **Multi-format Support**: Handles MP3, WAV, M4A, and FLAC audio formats
+- **Resampling**: Automatic conversion to 16 kHz mono for consistent model input
+- **Duration Control**: Automatic trimming (>4s) and zero-padding (<4s) to standardize audio length
+- **Format Validation**: Server-side MP3 signature verification (ID3, FF FB/F3/F2 headers)
+
+### 🤖 Feature Extraction
+- **MFCCs (Mel-Frequency Cepstral Coefficients)**: 40-coefficient extraction with mean & std deviation (80 features)
+- **Spectral Features**: Spectral centroid and roll-off for frequency analysis
+- **Temporal Features**: Zero-crossing rate (ZCR) for onset detection
+- **Energy Features**: RMS energy measurement
+- **Pitch Analysis (F0)**: Fundamental frequency extraction using librosa's pYIN algorithm with confidence measures
+- **Total Features**: 85 dimensions per audio sample for robust classification
+
+### 🎯 Machine Learning
+- **RandomForest Classifier**: Trained model with configurable decision thresholds
+- **Confidence Scoring**: Prediction confidence weights (0.0–1.0) based on model probability
+- **Explainability**: Prediction explanations (e.g., "AI voice detected" or "Human voice detected")
+
+### 🔐 API & Security
+- **FastAPI Server**: Modern Python async framework with automatic Swagger UI documentation
+- **API Key Authentication**: Bearer token or header-based (`x-api-key`) validation
+- **Request Validation**: Strict Pydantic schemas with field validators
+- **Language Support**: Detects 5 languages: Tamil, English, Malayalam, Hindi, Telugu
+- **Error Handling**: Comprehensive HTTP exceptions with descriptive error messages
+
+### 🔌 Endpoints Implemented
+1. **`POST /process`**
+   - Accepts Base64-encoded MP3 with language tag
+   - Returns: prediction (HUMAN/AI), confidence score, language, and explanation
+   - Requires: API key authentication
+
+2. **`POST /encode-audio`**
+   - Accepts audio file upload (MP3, WAV, M4A, FLAC)
+   - Returns: Base64-encoded audio for reuse in `/process`
+   - No authentication required
+
+3. **`GET /docs`**
+   - Auto-generated Swagger UI for live API testing
+
+### 🔄 Workflow Integration
+- **n8n Webhook Support**: JSON-based request/response for automated voice detection pipelines
+- **Stateless Design**: Each request is independent; no session management needed
+
+### 📊 Testing Infrastructure
+- **Unit Tests**: `test_pipeline.py` validates audio processing pipeline (Base64 → waveform)
+- **Batch Prediction**: `test_predict.py` tests end-to-end prediction on `.mp3` files in `data/`
+- **Data Directory**: Organized structures for `human/` and `ai/` labeled audio samples
+
+---
+
 ## 👥 Contributors
 - Member 1 — ML model, feature extractor: **(status: feature extraction & RF training done; evaluation missing)**
 - Member 2 — Audio pipeline: **(status: pipeline implemented; trimming & padding done; integration to API pending)**
